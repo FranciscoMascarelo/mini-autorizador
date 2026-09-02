@@ -1,0 +1,9 @@
+com\teste\miniautorizador\repository\CartaoRepositoryTest.class
+com\teste\miniautorizador\validation\RegraSenhaValidaTest.class
+com\teste\miniautorizador\integration\FluxoCompletoTest.class
+com\teste\miniautorizador\MiniautorizadorApplicationTests.class
+com\teste\miniautorizador\service\impl\CartaoServiceImplTest.class
+com\teste\miniautorizador\service\ConcorrenciaTest.class
+com\teste\miniautorizador\controller\CartaoControllerTest.class
+com\teste\miniautorizador\controller\TransacaoControllerTest.class
+com\teste\miniautorizador\validation\RegraSaldoSuficienteTest.class

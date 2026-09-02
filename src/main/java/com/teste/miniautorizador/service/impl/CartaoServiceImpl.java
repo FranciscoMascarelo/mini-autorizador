@@ -26,7 +26,7 @@ public class CartaoServiceImpl implements CartaoService {
 
     private final CartaoRepository cartaoRepository;
     private final List<RegraAutorizacao> regrasAutorizacao;
-    private final PasswordEncoder passwordEncoder; // Injetar o encoder
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public CartaoResponseDTO criarCartao(CartaoRequestDTO request) {

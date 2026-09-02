@@ -1,137 +1,239 @@
-# mini-autorizador
-Mini autorizador de transações
+# 🏦 Mini Autorizador
 
-#Teste de programação - VR Benefícios
+Sistema de autorização de transações para cartões de benefícios (Vale Refeição, Vale Alimentação, etc.) desenvolvido com Spring Boot.
 
-Como parte do processo de seleção, gostaríamos que você desenvolvesse um pequeno sistema, para que possamos ver melhor o seu trabalho.
+## 📋 Sobre o Projeto
 
-Fique à vontade para criar a partir dos requisitos abaixo. Se algo não ficou claro, pode assumir o que ficar mais claro para você, e, por favor, *documente suas suposições*.
+O Mini Autorizador é uma aplicação REST que simula o processo de autorização de transações realizadas com cartões de benefícios. O sistema processa requisições de débito, aplicando regras de negócio para aprovar ou recusar transações com base em critérios como existência do cartão, validade da senha e saldo disponível.
 
-Crie o projeto no seu Github para que possamos ver os passos realizados (por meio dos commits) para a implementação da solução.
+### Funcionalidades Principais
 
-Caso sua solução seja aprovada, faremos uma entrevista contigo, e a utilizaremos durante a entrevista.
+- Criação de cartões com saldo inicial de R$ 500,00
+- Consulta de saldo em tempo real
+- Autorização de transações com validações de segurança
+- Criptografia de senhas com BCrypt
+- Controle de concorrência para transações simultâneas
+- Documentação interativa da API com Swagger
 
-Se quiser documentar outros detalhes da sua solução (como *design patterns* e boas práticas utilizadas e outras decisões de projeto) pode mandar ver!
+## 🛠️ Tecnologias Utilizadas
 
-# Mini autorizador
+### Stack Principal
 
-A VR processa todos os dias diversas transações de Vale Refeição e Vale Alimentação, entre outras.
-De forma breve, as transações saem das maquininhas de cartão e chegam até uma de nossas aplicações, conhecida como *autorizador*, que realiza uma série de verificações e análises. Essas também são conhecidas como *regras de autorização*. 
+| Tecnologia | Versão | Finalidade |
+|------------|--------|------------|
+| Java | 17 | Linguagem de programação |
+| Spring Boot | 3.2.0 | Framework principal |
+| Spring Data JPA | 3.2.0 | Persistência de dados |
+| Spring Security Crypto | 6.2.0 | Criptografia de senhas |
+| MySQL | 5.7 | Banco de dados relacional |
+| H2 Database | 2.x | Banco em memória para testes |
+| Maven | 3.9+ | Gerenciamento de dependências |
+| Docker | 24+ | Containerização |
+| JUnit 5 | 5.10+ | Testes automatizados |
+| Mockito | 5.7+ | Mock para testes unitários |
+| Lombok | 1.18+ | Redução de boilerplate |
+| SpringDoc OpenAPI | 2.3.0 | Documentação da API (Swagger) |
 
-Ao final do processo, o autorizador toma uma decisão, aprovando ou não a transação: 
-* se aprovada, o valor da transação é debitado do saldo disponível do benefício, e informamos à maquininha que tudo ocorreu bem. 
-* senão, apenas informamos o que impede a transação de ser feita e o processo se encerra.
+### Dependências Principais
 
-Sua tarefa será construir um *mini-autorizador*. Este será uma aplicação Spring Boot com interface totalmente REST que permita:
-
- * a criação de cartões (todo cartão deverá ser criado com um saldo inicial de R$500,00)
- * a obtenção de saldo do cartão
- * a autorização de transações realizadas usando os cartões previamente criados como meio de pagamento
-
-## Regras de autorização a serem implementadas
-
-Uma transação pode ser autorizada se:
-   * o cartão existir
-   * a senha do cartão for a correta
-   * o cartão possuir saldo disponível
-
-Caso uma dessas regras não ser atendida, a transação não será autorizada.
-
-## Demais instruções
-
-O projeto contém um docker-compose.yml com 1 banco de dados relacional e outro não relacional.
-Sinta-se à vontade para utilizar um deles. Se quiser, pode deixar comentado o banco que não for utilizar, mas não altere o que foi declarado para o banco que você selecionou. 
-
-Não é necessário persistir a transação. Mas é necessário persistir o cartão criado e alterar o saldo do cartão caso uma transação ser autorizada pelo sistema.
-
-Serão analisados o estilo e a qualidade do seu código, bem como as técnicas utilizadas para sua escrita. Ficaremos felizes também se você utilizar testes automatizados como ferramenta auxiliar de criação da solução.
-
-Também, na avaliação da sua solução, serão realizados os seguintes testes, nesta ordem:
-
- * criação de um cartão
- * verificação do saldo do cartão recém-criado
- * realização de diversas transações, verificando-se o saldo em seguida, até que o sistema retorne informação de saldo insuficiente
- * realização de uma transação com senha inválida
- * realização de uma transação com cartão inexistente
-
-Esses testes serão realizados:
-* rodando o docker-compose enviado para você
-* rodando a aplicação 
-
-Para isso, é importante que os contratos abaixo sejam respeitados:
-
-## Contratos dos serviços
-
-### Criar novo cartão
+```xml
+<dependencies>
+    <!-- Web/REST -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    
+    <!-- Persistência -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    
+    <!-- Validação -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    
+    <!-- Segurança (Criptografia) -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-crypto</artifactId>
+    </dependency>
+    
+    <!-- Banco de Dados -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    
+    <!-- Testes -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    
+    <!-- Documentação -->
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>2.3.0</version>
+    </dependency>
+</dependencies>
 ```
-Method: POST
-URL: http://localhost:8080/cartoes
-Body (json):
-{
-    "numeroCartao": "6549873025634501",
-    "senha": "1234"
+
+## PARTE 3 - Arquitetura
+
+## 🏗️ Arquitetura
+
+### Visão Geral
+
+O projeto segue uma arquitetura em camadas (Layered Architecture) com princípios de Clean Architecture e Domain-Driven Design (DDD) simplificado.
+
+### Estrutura de Pacotes
+
+
+### Fluxo da Aplicação
+
+1. **Controller** recebe a requisição HTTP
+2. **DTO** valida os dados de entrada
+3. **Service** orquestra a lógica de negócio
+4. **Validation** aplica as regras de autorização
+5. **Repository** persiste e consulta dados
+6. **Entity** representa o modelo de domínio
+7. **Exception Handler** trata erros e retorna respostas apropriadas
+
+## 🎯 Design Patterns Utilizados
+
+### 1. Strategy Pattern (Padrão de Estratégia)
+
+Utilizado para implementar as regras de autorização de forma flexível e extensível.
+
+```java
+// Interface Strategy
+public interface RegraAutorizacao {
+    int getOrdem();
+    void validar(Cartao cartao, TransacaoRequestDTO transacao);
+}
+
+// Implementações concretas
+@Component
+@Order(1)
+public class RegraSenhaValida implements RegraAutorizacao {
+    // Implementação específica
+}
+
+@Component
+@Order(2)
+public class RegraSaldoSuficiente implements RegraAutorizacao {
+    // Implementação específica
+}
+````
+### Benefícios:
+
+- Fácil adicionar novas regras sem modificar código existente
+
+- Cada regra é isolada e testável independentemente
+
+- Ordenação controlada das validações
+
+### 2. Repository Pattern (Padrão de Repositório)
+```java
+@Repository
+public interface CartaoRepository extends JpaRepository<Cartao, Long> {
+Optional<Cartao> findByNumeroCartao(String numeroCartao);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT c FROM Cartao c WHERE c.numeroCartao = :numeroCartao")
+    Optional<Cartao> findByNumeroCartaoWithLock(@Param("numeroCartao") String numeroCartao);
+}
+````
+
+### 3. DTO Pattern (Data Transfer Object)
+Separação entre o modelo de domínio e o modelo de transferência:
+```java
+// Entidade de domínio
+@Entity
+public class Cartao {
+private String senha; // Senha criptografada
+// ...
+}
+
+// DTO de transferência
+public class CartaoRequestDTO {
+@NotBlank
+private String numeroCartao;
+@NotBlank
+private String senha; // Senha em texto puro (para validação)
 }
 ```
-#### Possíveis respostas:
+
+### 4. Exception Handling Pattern
+Tratamento centralizado de exceções com @RestControllerAdvice:
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(CartaoExistenteException.class)
+    public ResponseEntity<CartaoResponseDTO> handleCartaoExistente(CartaoExistenteException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+            .body(ex.getCartaoResponse());
+    }
+}
 ```
-Criação com sucesso:
-   Status Code: 201
-   Body (json):
-   {
-      "senha": "1234",
-      "numeroCartao": "6549873025634501"
-   } 
------------------------------------------
-Caso o cartão já exista:
-   Status Code: 422
-   Body (json):
-   {
-      "senha": "1234",
-      "numeroCartao": "6549873025634501"
-   } 
+### 5. Builder Pattern
+Utilizado através do Lombok para construção de objetos complexos:
+
+```java
+Cartao cartao = Cartao.builder()
+    .numeroCartao("6549873025634501")
+    .senha(senhaCriptografada)
+    .saldo(new BigDecimal("500.00"))
+    .build();
 ```
 
-### Obter saldo do Cartão
-```
-Method: GET
-URL: http://localhost:8080/cartoes/{numeroCartao} , onde {numeroCartao} é o número do cartão que se deseja consultar
-```
 
-#### Possíveis respostas:
-```
-Obtenção com sucesso:
-   Status Code: 200
-   Body: 495.15 
------------------------------------------
-Caso o cartão não exista:
-   Status Code: 404 
-   Sem Body
-```
+## PARTE 5 - Segurança
 
-### Realizar uma Transação
-```
-Method: POST
-URL: http://localhost:8080/transacoes
-Body (json):
-{
-    "numeroCartao": "6549873025634501",
-    "senhaCartao": "1234",
-    "valor": 10.00
+## 🔒 Segurança
+
+### Criptografia de Senhas
+
+As senhas são criptografadas usando BCrypt (força 10), que é o algoritmo recomendado pelo OWASP para hash de senhas.
+
+```java
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder(10);
 }
 ```
 
-#### Possíveis respostas:
-```
-Transação realizada com sucesso:
-   Status Code: 201
-   Body: OK 
------------------------------------------
-Caso alguma regra de autorização tenha barrado a mesma:
-   Status Code: 422 
-   Body: SALDO_INSUFICIENTE|SENHA_INVALIDA|CARTAO_INEXISTENTE (dependendo da regra que impediu a autorização)
+### Características do BCrypt:
+
+- Salt automático (16 bytes aleatórios)
+
+- Função adaptativa (pode aumentar a força conforme hardware)
+
+- Resistente a ataques de força bruta
+
+- Gera hash de 60 caracteres
+
+### Controle de Concorrência
+#### Locking Otimista
+```java
+@Entity
+public class Cartao {
+    @Version
+    private Long version;
+}
 ```
 
-Desafios (não obrigatórios): 
- * é possível construir a solução inteira sem utilizar nenhum if. Só não pode usar *break* e *continue*! 
- * como garantir que 2 transações disparadas ao mesmo tempo não causem problemas relacionados à concorrência?
-Exemplo: dado que um cartão possua R$10.00 de saldo. Se fizermos 2 transações de R$10.00 ao mesmo tempo, em instâncias diferentes da aplicação, como o sistema deverá se comportar?
+#### Locking Pessimista
+```java
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+@Query("SELECT c FROM Cartao c WHERE c.numeroCartao = :numeroCartao")
+Optional<Cartao> findByNumeroCartaoWithLock(@Param("numeroCartao") String numeroCartao);
+```

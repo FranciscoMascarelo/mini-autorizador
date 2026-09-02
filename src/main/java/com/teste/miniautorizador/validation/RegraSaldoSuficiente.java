@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(2)
 public class RegraSaldoSuficiente implements RegraAutorizacao {
+
     @Override
     public int getOrdem() {
         return 2;

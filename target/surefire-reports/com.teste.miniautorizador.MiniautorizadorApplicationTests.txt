@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.teste.miniautorizador.MiniautorizadorApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.156 s -- in com.teste.miniautorizador.MiniautorizadorApplicationTests

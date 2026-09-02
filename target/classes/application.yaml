@@ -1,0 +1,67 @@
+# application.yml (sem acentos - versao segura)
+spring:
+  application:
+    name: mini-autorizador
+  
+  # Configuracao do MySQL
+  datasource:
+    url: jdbc:mysql://localhost:3306/miniautorizador?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: MiniAutorizadorPool
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      auto-commit: true
+  
+  # Configuracao do JPA/Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: false
+  
+  # Configuracoes de Jackson (JSON)
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-stacktrace: never
+
+# Configuracao do Springdoc/Swagger
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+    disable-swagger-default-url: true
+  api-docs:
+    path: /v3/api-docs
+  packages-to-scan: com.teste.miniautorizador.controller
+  paths-to-match: /**
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.teste.miniautorizador: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
